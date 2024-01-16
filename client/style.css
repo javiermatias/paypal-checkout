@@ -1,0 +1,69 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background: #584747;
+    background: -webkit-linear-gradient(to left, #434343, #000000);
+    background: linear-gradient(to left, #434343, #3d3535); 
+}
+.contenedor {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    flex-direction: column;
+    color: #fff;
+    font-family: sans-serif;
+}
+.texto-h1{
+    text-transform: uppercase;
+    font-weight:bold;
+    text-align: center;
+    font-size: 30px;
+    padding: 25px;
+    margin-top:50px;
+    width: 100%;
+}
+.texto-h2{
+    text-align: left;
+    width: 100%;
+    padding-left: 50px;
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight:bold;   
+    margin-top: 30px;
+}
+.texto-h3{
+    display: flex;
+    flex-wrap: wrap;
+} 
+
+.contenedor2{
+    width: 100%;
+    background-color: #4e2727;
+    text-align: center;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+ul li p{
+    font-size: 18px;
+}
+ul li p span{
+    font-weight: bold   ;
+}
+label{
+    font-size: 18px;
+    text-decoration:underline;
+}
+
+.paypalButtons{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
