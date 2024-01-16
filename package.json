@@ -3,10 +3,13 @@
   "description": "Sample Node.js web app to integrate PayPal Standard Checkout for online payments",
   "version": "1.0.0",
   "main": "server/server.js",
+  "engines": {
+    "node": "18.x"
+  },
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server/server.js",
+    "start": "node server/server.js",
     "format": "npx prettier --write **/*.{js,md}",
     "format:check": "npx prettier --check **/*.{js,md}",
     "lint": "npx eslint server/*.js --env=node && npx eslint client/*.js --env=browser"
