@@ -11,3 +11,10 @@ This folder contains example code for a Standard PayPal integration using both t
 5. Run `npm start`
 6. Open http://localhost:8888
 7. Click "PayPal" and log in with one of your [Sandbox test accounts](https://developer.paypal.com/dashboard/accounts)
+
+/*   "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ], */ 
