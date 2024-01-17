@@ -1,14 +1,5 @@
 let inputValue = document.getElementById('nombreLic').value;
 
-/* swal("Gracias por tu compra!", `
-Los datos de la licencia son:  
-Usuario:  ${inputValue} 
-Password:  ${inputValue}  
-Para activar el programa si ya utilizaste el demo,
-dentro del programa arriba a la derecha 
-vas a ver unas llaves. 
-Hace click ahi y coloca las credenciales.
-`); */
 window.paypal
   .Buttons({
     async createOrder() {
