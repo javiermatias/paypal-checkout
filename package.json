@@ -10,6 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node api/index.js",
+    "dev": "nodemon api/index.js",
     "format": "npx prettier --write **/*.{js,md}",
     "format:check": "npx prettier --check **/*.{js,md}",
     "lint": "npx eslint server/*.js --env=node && npx eslint client/*.js --env=browser"

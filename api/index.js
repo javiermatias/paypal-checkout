@@ -52,7 +52,8 @@ const createOrder = async (cart) => {
     cart,
   );
   const _user = cart[0].licencia;
-  let _userExists = await userExists(_user);
+  const mex = cart[0].mex ?? false;
+  let _userExists = await userExists(_user, mex);
   if(_userExists) {
     throw new Error("USER_EXISTS");
   } 
@@ -60,7 +61,7 @@ const createOrder = async (cart) => {
 
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders`;
-  const payload = {
+   const payload = {
     intent: "CAPTURE",
     purchase_units: [
       {
@@ -71,6 +72,7 @@ const createOrder = async (cart) => {
       },
     ],
   };
+  if (mex) {payload.purchase_units[0].amount.value = 42} 
 
   const response = await fetch(url, {
     headers: {
@@ -93,7 +95,7 @@ const createOrder = async (cart) => {
  * Capture payment for the created order to complete the transaction.
  * @see https://developer.paypal.com/docs/api/orders/v2/#orders_capture
  */
-const captureOrder = async (orderID, licencia) => {
+const captureOrder = async (orderID, licencia, mex) => {
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders/${orderID}/capture`;
 
@@ -110,7 +112,7 @@ const captureOrder = async (orderID, licencia) => {
     },
   });
 
-  return handleResponse1(response, licencia);
+  return handleResponse1(response, licencia, mex);
 };
 
 async function handleResponse(response) {
@@ -126,11 +128,11 @@ async function handleResponse(response) {
   }
 }
 
-async function handleResponse1(response, _user) {
+async function handleResponse1(response, _user, mex) {
   try {
     const jsonResponse = await response.json();
     //create here insert user
-    let _insertUser = await insertUser(_user);
+    let _insertUser = await insertUser(_user, mex);
     if(!_insertUser) {
       throw new Error("INSERT_FAIL");
     } 
@@ -165,8 +167,9 @@ app.post("/api/orders/:orderID/capture", async (req, res) => {
   try {
     const { orderID } = req.params;
     const { licencia } = req.body;
-    const { jsonResponse, httpStatusCode } = await captureOrder(orderID, licencia);
-    console.log(jsonResponse);
+    const { mex } = req.body ?? { mex: false };
+    const { jsonResponse, httpStatusCode } = await captureOrder(orderID, licencia, mex);
+    // console.log(jsonResponse);
     console.log(jsonResponse.payer.email_address);
 
     res.status(httpStatusCode).json(jsonResponse);
@@ -188,6 +191,11 @@ app.get("/", async(req, res) => {
     //let insUser = await insertUser('manuel151');
     //console.log(insUser);
     res.sendFile(path.resolve("./client/checkout.html"));
+});
+
+app.get("/sender-mex", async(req, res) => {
+
+  res.sendFile(path.resolve("./client/checkout-mex.html"));
 });
 
 
