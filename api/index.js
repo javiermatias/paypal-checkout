@@ -2,9 +2,18 @@ import express from "express";
 import fetch from "node-fetch";
 import "dotenv/config";
 import path from "path";
-import {userExists, insertUser } from './userdb.js';
+import {userExists, insertUser, newClient } from './userdb.js';
+// Import necessary modules
+import { fileURLToPath } from 'url';
 
-const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_URL, PORT = 8888 } = process.env;
+//s
+// Get the current file's URL (ESM-specific)
+const __filenameNew = fileURLToPath(import.meta.url);
+
+// Calculate the directory name
+const __dirnameNew = path.dirname(__filenameNew);
+
+const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_URL, PORT = 8888, TOKEN } = process.env;
 const base = PAYPAL_URL;
 const app = express();
 
@@ -182,15 +191,13 @@ app.post("/api/orders/:orderID/capture", async (req, res) => {
 // serve index.html
 app.get("/", async(req, res) => {
 
-    // Execute a query using the connection pool
-    //const [rows, fields] = await db.execute('SELECT * FROM accounts');
-    //console.log(rows);
-    // Send the result to the client
-    //res.json({ users: rows });
-    //console.log('Type of rows:', typeof rows);
-    //let insUser = await insertUser('manuel151');
-    //console.log(insUser);
-    res.sendFile(path.resolve("./client/checkout.html"));
+  console.log(__dirnameNew)
+  const rootDirectory = path.join(__dirnameNew, '..'); // Go one directory back from __dirnameNew
+  const filePath = 'client/checkout.html'; // Relative path from the root directory
+
+  res.sendFile(filePath, { root: rootDirectory });
+  //res.sendFile('checkout.html', { root: path.join(__dirnameNew, '.../client') });
+  //res.sendFile(path.resolve("./client/checkout.html"));
 });
 
 app.get("/sender-mex", async(req, res) => {
@@ -198,6 +205,35 @@ app.get("/sender-mex", async(req, res) => {
   res.sendFile(path.resolve("./client/checkout-mex.html"));
 });
 
+///////////////////////////SMS SENDER//////////////////////////
+
+app.post("/api/registrar", async(req, res) => {
+  try {
+
+    const { nombre, apellido, email, programa, usuario, token } = req.body;
+    if (!nombre || !apellido || !email || !programa || !usuario || !token) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (token !== TOKEN) {
+      return res.status(403).json({ error: 'Invalid request' });
+    }
+         //create here insert user
+    let _insertUser = await newClient({ nombre, apellido, email, programa, usuario });
+    if(!_insertUser) {
+      return res.status(500).json({ error: 'Failed to insert user' });
+    } 
+          // Respond with success
+    return res.status(201).json({ message: 'User registered successfully1s' });
+    
+  } catch (err) {
+    console.error('Error during user registration:', err.message);
+    return res.status(500).json({ error: 'Internal Server Error', details: err.message })
+  }
+});
+
+
+//////////////////////////////////////////////////////////////
 
 
 app.listen(PORT, () => {  

@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888" # Map container port 3000 to host port 3000
+    volumes:
+      - .:/app      # Mount the current directory to the container's /app directory
+      - /app/node_modules # Prevent overwriting the node_modules in the container
+    environment:
+      NODE_ENV: development
+    env_file:
+    - .env  # Load the .env file
+    command: ["npm", "run", "dev"]  # Use the "dev" script which runs nodemon

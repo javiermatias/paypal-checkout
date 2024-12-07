@@ -1,6 +1,7 @@
 import db from './mysqlconn.js';
-
+// Import the Client class (default export)
 // Example controller
+
 async function userExists(username, mex = false) {
   //const { username } = req.params;
 
@@ -37,6 +38,33 @@ async function insertUser(username, mex = false) {
   }
 }
 
+async function newClient(client) {
+  try {
+    // Prepare the query to call the stored procedure
+    const query = 'CALL sp_newClient(?, ?, ?, ?, ?)';
+    const params = [
+      client.nombre,
+      client.apellido,
+      client.email,
+      client.programa,
+      client.usuario,
+    ];
+
+    // Execute the query with the client's attributes
+    const [result] = await db.execute(query, params);
+
+    // Check the result and return success/failure
+    console.log('Stored procedure executed successfully:', result);
+    return result.affectedRows > 0;
+  } catch (error) {
+    // Log and rethrow the error for further handling
+    console.error('Error calling stored procedure:', error);
+    throw new Error('An error occurred while inserting the client.');
+  }
+
+}
+
+
 
 
 /* async function insertUser(username) {
@@ -55,4 +83,4 @@ async function insertUser(username, mex = false) {
 
 
 
-export { userExists, insertUser }
+export { userExists, insertUser,newClient }

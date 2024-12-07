@@ -18,3 +18,7 @@ This folder contains example code for a Standard PayPal integration using both t
       "dest": "/"
     }
   ], */ 
+
+
+  docker-compose up --build
+
