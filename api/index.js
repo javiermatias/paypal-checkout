@@ -200,6 +200,10 @@ app.get("/", async(req, res) => {
   //res.sendFile(path.resolve("./client/checkout.html"));
 });
 
+app.get('/paypal', (req, res) => {
+  res.send('PayPal endpoint is working!');
+});
+
 app.get("/sender-mex", async(req, res) => {
 
   res.sendFile(path.resolve("./client/checkout-mex.html"));
