@@ -2,7 +2,7 @@ import express from "express";
 import fetch from "node-fetch";
 import "dotenv/config";
 import path from "path";
-import {userExists, insertUser, newClient } from './userdb.js';
+import {userExists, insertUser, newClient,newSenderPrueba } from './userdb.js';
 // Import necessary modules
 import { fileURLToPath } from 'url';
 
@@ -211,7 +211,7 @@ app.get("/sender-mex", async(req, res) => {
 
 ///////////////////////////SMS SENDER//////////////////////////
 
-app.post("/api/registrar", async(req, res) => {
+app.post("/paypal/registrar", async(req, res) => {
   try {
 
     const { nombre, apellido, email, programa, usuario, token } = req.body;
@@ -227,8 +227,13 @@ app.post("/api/registrar", async(req, res) => {
     if(!_insertUser) {
       return res.status(500).json({ error: 'Failed to insert user' });
     } 
+
+    let _generateUser = await newSenderPrueba({ usuario, password:usuario });
+    if(!_generateUser) {
+      return res.status(500).json({ error: 'Failed to insert user' });
+    } 
           // Respond with success
-    return res.status(201).json({ message: 'User registered successfully1s' });
+    return res.status(201).json({ message: 'User registered successfully' });
     
   } catch (err) {
     console.error('Error during user registration:', err.message);
@@ -236,6 +241,31 @@ app.post("/api/registrar", async(req, res) => {
   }
 });
 
+app.post("/paypal/userexists", async(req, res) => {
+  try {
+
+    const { usuario, token } = req.body;
+    if ( !usuario || !token) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (token !== TOKEN) {
+      return res.status(403).json({ error: 'Invalid request' });
+    }
+    
+    //create here insert user
+    let _existsUser= await userExists(usuario);
+    if(_existsUser) {
+      return res.status(200).json({ exists: true });
+    }      
+    //Respond with success
+    return res.status(200).json({ exists: false });
+    
+  } catch (err) {
+    console.error('Error during user registration:', err.message);
+    return res.status(500).json({ error: 'Internal Server Error', details: err.message })
+  }
+});
 
 //////////////////////////////////////////////////////////////
 

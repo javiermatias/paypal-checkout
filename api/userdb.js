@@ -64,6 +64,29 @@ async function newClient(client) {
 
 }
 
+async function newSenderPrueba(user) {
+  try {
+    // Prepare the query to call the stored procedure
+    const query = 'CALL sp_newSMSsenderPrueba(?, ?)';
+    const params = [
+      user.usuario,
+      user.password    
+    ];
+
+    // Execute the query with the client's attributes
+    const [result] = await db.execute(query, params);
+
+    // Check the result and return success/failure
+    console.log('Stored procedure executed successfully:', result);
+    return result.affectedRows > 0;
+  } catch (error) {
+    // Log and rethrow the error for further handling
+    console.error('Error calling stored procedure:', error);
+    throw new Error('An error occurred while inserting the client.');
+  }
+
+}
+
 
 
 
@@ -83,4 +106,4 @@ async function newClient(client) {
 
 
 
-export { userExists, insertUser,newClient }
+export { userExists, insertUser,newClient,newSenderPrueba }
