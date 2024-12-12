@@ -1,6 +1,6 @@
 import express from "express";
 import fetch from "node-fetch";
-require('dotenv').config();
+import "dotenv/config";
 import path from "path";
 import {userExists, insertUser, newClient,newSenderPrueba } from './userdb.js';
 // Import necessary modules
