@@ -249,6 +249,7 @@ app.post("/paypal/userexists", async(req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
+    console.log(TOKEN)
     if (token !== TOKEN) {
       return res.status(403).json({ error: 'Invalid request' });
     }
